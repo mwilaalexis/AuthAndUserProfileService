@@ -1,5 +1,5 @@
-﻿using UserProfileServiceProject.DTOs;
-using UserProfileServiceProject.Entities;
+﻿using UserProject.Core.DTOs;
+using UserProject.DataAccess.Entities;
 
 namespace UserProfileServiceProject.Mappings
 {
@@ -8,7 +8,7 @@ namespace UserProfileServiceProject.Mappings
         public MappingProfile()
         {
             
-            CreateMap<Entities.Profile, ProfileDto>()
+            CreateMap<Profile, ProfileDto>()
                 .ForMember(dest => dest.Bmi, opt => opt.MapFrom(src =>
                     src.HeightCm.HasValue && src.WeightKg.HasValue && src.HeightCm.Value > 0
                         ? Math.Round(src.WeightKg.Value / (src.HeightCm.Value / 100m * src.HeightCm.Value / 100m), 1)
@@ -17,24 +17,59 @@ namespace UserProfileServiceProject.Mappings
                     opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.Allergies)
                         ? new List<string>()
                         : src.Allergies.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList()));
-
-           
-            CreateMap<ProfileUpdateDto, Entities.Profile>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            // Add this to your MappingProfile constructor
+            CreateMap<ProfileDto, Profile>()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore()) // Don't let the DTO overwrite the Owner ID
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.Allergies, opt => opt.MapFrom(src =>
+                    src.Allergies != null && src.Allergies.Any()
+                        ? string.Join(",", src.Allergies)
+                        : string.Empty));
 
             CreateMap<CreateProfileDto, Profile>()
-      .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-      .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-      .ForMember(dest => dest.Allergies,
-          opt => opt.MapFrom(src => src.Allergies != null ? string.Join(",", src.Allergies) : null));
+              .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+              .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+              .ForMember(dest => dest.Allergies,
+                     opt => opt.MapFrom(src => src.Allergies != null ? string.Join(",", src.Allergies) : null));
 
+          
+            CreateMap<Profile, UserProfileSummary>()
+                .ForMember(dest => dest.Weightkg,
+                    opt => opt.MapFrom(src => src.WeightKg.HasValue
+                        ? (double)src.WeightKg.Value
+                        : 0))
 
-            CreateMap<ProfileUpdateDto, Entities.Profile>()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.HeightCm,
+                    opt => opt.MapFrom(src => src.HeightCm.HasValue
+                        ? (double)src.HeightCm.Value
+                        : 0))
+
                 .ForMember(dest => dest.Allergies,
-                    opt => opt.MapFrom(src => src.Allergies != null ? string.Join(",", src.Allergies) : null));
+                    opt => opt.MapFrom(src =>
+                        string.IsNullOrWhiteSpace(src.Allergies)
+                            ? new List<string>()
+                            : src.Allergies
+                                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(a => a.Trim())
+                                .ToList()
+                    ));
+            CreateMap<User, UserDto>()
+          .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
+          .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+          .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+          .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
+
+            CreateMap<UpdateProfileDto, Profile>()
+            .ForMember(dest => dest.UserId, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore()) // handled in service
+            .ForMember(dest => dest.ProfileUrl, opt => opt.Ignore()) // handled in service when uploading file
+            .ForMember(dest => dest.Allergies, opt => opt.MapFrom(src =>
+                !string.IsNullOrWhiteSpace(src.Allergies)
+                    ? src.Allergies
+                    : string.Empty));
+            
         }
     }
 }

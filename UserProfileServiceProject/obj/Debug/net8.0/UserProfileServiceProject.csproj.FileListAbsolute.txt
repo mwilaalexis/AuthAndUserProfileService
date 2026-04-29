@@ -285,6 +285,7 @@ C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserP
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\UserProfileServiceProject.csproj.CoreCompileInputs.cache
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\UserProfileServiceProject.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\UserProfileServiceProject.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\UserProfileServiceProject.sourcelink.json
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -301,3 +302,8 @@ C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserP
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\UserProfileServiceProject.pdb
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\UserProfileServiceProject.genruntimeconfig.cache
 C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\obj\Debug\net8.0\ref\UserProfileServiceProject.dll
+C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\bin\Debug\net8.0\UserProfileServiceProject.staticwebassets.runtime.json
+C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\bin\Debug\net8.0\UserProject.core.dll
+C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\bin\Debug\net8.0\UserProject.DataAccess.dll
+C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\bin\Debug\net8.0\UserProject.core.pdb
+C:\Users\walter white\Downloads\Nutriguide-V2-Nutriguid-UserProfileService\UserProfileService\UserProfileServiceProject\bin\Debug\net8.0\UserProject.DataAccess.pdb

@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using UserProfileServiceProject.Data;
+using UserProject.DataAccess.Data;
 using UserProfileServiceProject.Mappings;
 using UserProfileServiceProject.Repositories.Implementations;
-using UserProfileServiceProject.Repositories.Interfaces;
-using UserProfileServiceProject.Security;
-using UserProfileServiceProject.Services.Implementations;
-using UserProfileServiceProject.Services.Interfaces;
+using UserProject.DataAccess.Repositories.Interfaces;
+using UserProject.Core.Security;
+using UserProject.Core.Services.Implementations;
+using UserProject.Core.Services.Interfaces;
+using UserProject.DataAccess.Repositories.Implementations;
 
 namespace UserProfileServiceProject.Extensions
 {
@@ -21,8 +22,10 @@ namespace UserProfileServiceProject.Extensions
             var connection = builder.Configuration.GetConnectionString("DefaultConnection").ToString();
             builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connection));
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -53,11 +56,11 @@ namespace UserProfileServiceProject.Extensions
             {
 
                 options.AddPolicy("BasicUserAccess", policy =>
-                    policy.RequireRole("User", "Monitor", "Admin"));
+                    policy.RequireRole("User", "Moderator", "Admin"));
 
 
                 options.AddPolicy("ContentManager", policy =>
-                    policy.RequireRole("Monitor", "Admin"));
+                    policy.RequireRole("Moderator", "Admin"));
 
 
                 options.AddPolicy("AdminOnly", policy =>
@@ -67,20 +70,41 @@ namespace UserProfileServiceProject.Extensions
         public static void ConfigureAuthentication(this WebApplicationBuilder builder)
         {
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-                };
-            });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+
+                       
+                        ClockSkew = TimeSpan.FromMinutes(2),           
+                    };
+
+                   
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine("=== JWT AUTH FAILED ===");
+                            Console.WriteLine("Exception: " + context.Exception.Message);
+                            if (context.Exception is SecurityTokenExpiredException expEx)
+                            {
+                                Console.WriteLine($"Token expired at: {expEx.Expires}");
+                                Console.WriteLine($"Current server time: {DateTime.UtcNow}");
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
         }
 
     }
