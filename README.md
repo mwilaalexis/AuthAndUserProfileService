@@ -1,7 +1,3 @@
-Got it — if your project is **3-layer (not Clean Architecture)**, the README should reflect that clearly. Here’s a corrected and more accurate version:
-
----
-
 # 📌 Auth & User Profile Service
 
 A **3-layer architecture authentication and user profile service** built with **.NET 8**, designed to manage user identity, authentication, and profile data in a clean and maintainable way.
